@@ -1,32 +1,36 @@
-import { Input, FormControl, HStack, Image } from "native-base";
+import { Input, FormControl, HStack } from "native-base";
+import React from "react";
 
 interface InputProps {
-    label?: string;
-    placeholder: string;
-    secureTextEntry?: boolean;
-    leftIcon?: React.ReactNode;
-  }
-  
+  placeholder: string;
+  secureTextEntry?: boolean;
+  value: string;
+  onChangeText: (text: string) => void;
+}
 
-  export function EntradaTexto ({
-    placeholder, 
-    secureTextEntry = false
-  } : InputProps) : JSX.Element {
-    return (
-      <FormControl mt={3}>
-        <HStack space={1} justifyContent={'center'} alignItems={'center'}>
-          <Input
-            placeholder={placeholder}
-            size={'lg'}
-            w={'90%'}
-            borderRadius={'lg'}
-            backgroundColor={'#ffff'}
-            variant={"underlined"}
-            borderColor={'#00213D'}
-            paddingLeft={2}
-            secureTextEntry={secureTextEntry}
-          />
-        </HStack>
-      </FormControl>
-    );
-  };
+export function EntradaTexto({
+  placeholder,
+  secureTextEntry = false,
+  value,
+  onChangeText,
+}: InputProps): JSX.Element {
+  return (
+    <FormControl mt={3}>
+      <HStack space={1} justifyContent={'center'} alignItems={'center'}>
+        <Input
+          placeholder={placeholder}
+          size={'lg'}
+          w={'90%'}
+          borderRadius={'lg'}
+          backgroundColor={'#ffff'}
+          variant={"underlined"}
+          borderColor={'#00213D'}
+          paddingLeft={2}
+          secureTextEntry={secureTextEntry}
+          value={value}
+          onChangeText={onChangeText}
+        />
+      </HStack>
+    </FormControl>
+  );
+}

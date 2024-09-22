@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import { TouchableOpacity } from "react-native";
-import { Image, VStack, Text, Box, HStack, Alert } from "native-base";
+import { TouchableOpacity } from 'react-native';
+import { Image, VStack, Text, Box, HStack, Alert } from 'native-base';
 import Logo from './assets/logo.png';
 import Arroba from './assets/arroba.png';
 import Cadeado from './assets/cadeado.png';
-import { EntradaTexto } from "./componentes/EntradaTextoLogin";
-import { Botao } from "./componentes/Botao";
-import { login } from './api'; // Importe a função de login
+import { EntradaTexto } from './componentes/EntradaTextoLogin';
+import { Botao } from './componentes/Botao';
+import { login } from './api'; 
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../App';
+import { useNavigation } from '@react-navigation/native';
+
+type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
 export default function Login() {
+  const navigation = useNavigation<LoginScreenNavigationProp>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -17,15 +23,10 @@ export default function Login() {
     try {
       const data = await login(email, password);
       console.log('Login bem-sucedido:', data);
-      // Aqui você pode redirecionar o usuário para a tela principal do app
-      // Por exemplo, se estiver usando React Navigation:
-      // navigation.navigate('Home'); 
+      // Navegar para Home (ou qualquer outra tela que você desejar)
+      // navigation.navigate('Home');
     } catch (err: any) {
-      if (err.response && err.response.data) {
-        setError(err.response.data.detail || 'Falha no login. Verifique suas credenciais.');
-      } else {
-        setError('Falha no login. Verifique suas credenciais.');
-      }
+      setError(err.response?.data?.detail || 'Falha no login. Verifique suas credenciais.');
     }
   };
 
@@ -68,7 +69,7 @@ export default function Login() {
 
       <Box w="100%" flexDirection="row" justifyContent="center" mt={10}>
         <Text>Novo na CryptoInsight? </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
           <Text color="blue.500">Cadastre-se!</Text>
         </TouchableOpacity>
       </Box>

@@ -1,67 +1,88 @@
-import { TouchableOpacity } from "react-native";
-import { Image, VStack, Text, Box, FormControl, Input, Button, Link, HStack } from "native-base";
-import Logo from './assets/logo.png'
-import Arroba from './assets/arroba.png'
-import Cadeado from './assets/cadeado.png'
-import botaoVoltar from './assets/botaoVoltar.png'
-import { Titulo } from "./componentes/Titulo";
-import { EntradaTexto } from "./componentes/EntradaTextoCadastro";
-import { Botao } from "./componentes/Botao";
-import { useState } from "react";
+import React, { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { VStack, Box, Image, Alert, Text } from 'native-base';
+import { EntradaTexto } from './componentes/EntradaTextoCadastro';
+import { Botao } from './componentes/Botao';
+import { Titulo } from './componentes/Titulo';
+import { register } from './api';
+import { StackNavigationProp } from '@react-navigation/stack';
+import Logo from './assets/logo.png';
+import { RootStackParamList } from '../App';
 
-export default function Login() {
-  const [numSecao, setNumSecao] = useState(0);
-  const secoes = [
-    {
-      id: 1,
-      titulo: 'Inscreva-se',
-      EntradaTextoCadastro: [
-        {
-          id: 1,
-          label: 'Nome',
-          placeholder: 'Digite seu nome completo'
-        },
-        {
-          id: 2,
-          label: 'E-mail',
-          placeholder: 'Digite seu e-mail'
-        },
-      ]
-    }
-  ]
+type CadastroScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Cadastro'>;
 
-  function avancarSecao() {
-    if (numSecao < secoes.length - 1) {
-      setNumSecao(numSecao + 1)
+interface Props {
+  navigation: CadastroScreenNavigationProp;
+}
+
+export default function Cadastro({ navigation }: Props) {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password1, setPassword1] = useState('');
+  const [password2, setPassword2] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  const handleRegister = async () => {
+    if (password1 !== password2) {
+      setError('As senhas não coincidem.');
+      return;
     }
 
-  }
-  function voltarSecao() {
-    if (numSecao > 0) {
-      setNumSecao(numSecao - 1)
+    try {
+      const data = await register(username, email, password1, password2);
+      console.log('Cadastro bem-sucedido:', data);
+      navigation.navigate('Login');
+    } catch (err: any) {
+      setError(err.response?.data?.detail || 'Falha no cadastro. Verifique suas informações.');
     }
-  }
+  };
 
   return (
-    <VStack flex={1} alignItems={'center'}
-      justifyContent={'center'} p={5}>
-      <Image source={Logo} alt="Logo Voll" />
+    <VStack flex={1} alignItems="center" justifyContent="center" p={5} bg="white">
+      <Image source={Logo} alt="Logo CryptoInsight" mb={5} />
+      <Titulo>Cadastro</Titulo>
 
-    <Titulo>{secoes[numSecao].titulo}</Titulo>
+      <EntradaTexto
+        label="Nome de usuário"
+        placeholder="Digite seu nome de usuário"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <EntradaTexto
+        label="Email"
+        placeholder="Digite seu e-mail"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <EntradaTexto
+        label="Senha"
+        placeholder="Digite sua senha"
+        secureTextEntry
+        value={password1}
+        onChangeText={setPassword1}
+      />
+      <EntradaTexto
+        label="Confirme a senha"
+        placeholder="Confirme sua senha"
+        secureTextEntry
+        value={password2}
+        onChangeText={setPassword2}
+      />
 
-      <Box marginTop={"1/6"}>
-        {
-          secoes[numSecao].EntradaTextoCadastro.map(entrada => {
-            return <EntradaTexto label={entrada.
-              label} placeholder={entrada.
-                placeholder} key={entrada.id}/>
-          })
-        }
+      {error && (
+        <Alert w="100%" status="error" mt={2}>
+          <Text>{error}</Text>
+        </Alert>
+      )}
+
+      <Botao onPress={handleRegister}>Cadastrar</Botao>
+
+      <Box w="100%" flexDirection="row" justifyContent="center" mt={5}>
+        <Text>Já possui uma conta? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text color="blue.500">Faça login</Text>
+        </TouchableOpacity>
       </Box>
-
-      {numSecao > 0 && <Botao onPress={() => voltarSecao()}
-        bgColor={'gray.400'}>Voltar</Botao>}
-      <Botao onPress={() => avancarSecao()} mt={4}>Avançar</Botao>
     </VStack>
   );
 }

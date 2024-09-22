@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-lu0xv6ez-zw*)o65$r6du0o5n(4fk1juw56q55hctpa_uzoo&r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.49.23.217', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['10.49.23.217', 'localhost', '127.0.0.1', '192.168.0.21']
 
 
 # Application definition
@@ -144,3 +144,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+REST_USE_JWT = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True

@@ -6,7 +6,7 @@ import Arroba from './assets/arroba.png';
 import Cadeado from './assets/cadeado.png';
 import { EntradaTexto } from "./componentes/EntradaTextoLogin";
 import { Botao } from "./componentes/Botao";
-import { login } from './api';
+import { login } from './api'; // Importe a função de login
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -17,6 +17,9 @@ export default function Login() {
     try {
       const data = await login(email, password);
       console.log('Login bem-sucedido:', data);
+      // Aqui você pode redirecionar o usuário para a tela principal do app
+      // Por exemplo, se estiver usando React Navigation:
+      // navigation.navigate('Home'); 
     } catch (err: any) {
       if (err.response && err.response.data) {
         setError(err.response.data.detail || 'Falha no login. Verifique suas credenciais.');

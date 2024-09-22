@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import UserDetailView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/auth/', include('dj_rest_auth.urls')),  # Endpoints de login/logout
-    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # Endpoints de registro
+    path('api/auth/', include('dj_rest_auth.urls')),  # endpoints de login ou logout
+    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # endpoints de cadastro
+    path('api/auth/user/', UserDetailView.as_view(), name='user-detail'),
 ]

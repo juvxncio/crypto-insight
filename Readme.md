@@ -44,7 +44,7 @@ Crypto Insight é um aplicativo que permite aos usuários acompanhar o preço da
 3. **Inicie o servidor Expo**:
 
    ```bash
-   expo start
+   npx expo start
 4. **Instale as dependências do backend**:
 
    ```bash

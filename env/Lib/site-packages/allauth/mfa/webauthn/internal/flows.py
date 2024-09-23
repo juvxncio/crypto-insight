@@ -22,31 +22,60 @@ from allauth.mfa.recovery_codes.internal.flows import (
 from allauth.mfa.webauthn.internal import auth
 
 
-def begin_registration(request: HttpRequest, user, passwordless: bool) -> dict:
-    raise_if_reauthentication_required(request)
+def begin_registration(
+    request: HttpRequest, user, passwordless: bool, signup: bool = False
+) -> dict:
+    if not signup:
+        raise_if_reauthentication_required(request)
     creation_options = auth.begin_registration(user, passwordless)
     return creation_options
+
+
+def signup_authenticator(request, user, name: str, credential: dict) -> Authenticator:
+    authenticator, rc_authenticator = _signup_or_add_authenticator(
+        request, user, name, credential, signup=True
+    )
+    return authenticator
 
 
 def add_authenticator(
     request, name: str, credential: dict
 ) -> Tuple[Authenticator, Optional[Authenticator]]:
     raise_if_reauthentication_required(request)
+    return _signup_or_add_authenticator(
+        request,
+        user=request.user,
+        name=name,
+        credential=credential,
+        signup=False,
+    )
+
+
+def _signup_or_add_authenticator(
+    request,
+    user,
+    name: str,
+    credential: dict,
+    signup: bool = False,
+) -> Tuple[Authenticator, Optional[Authenticator]]:
     authenticator = auth.WebAuthn.add(
-        request.user,
+        user,
         name,
         credential,
     ).instance
     signals.authenticator_added.send(
         sender=Authenticator,
         request=request,
-        user=request.user,
+        user=user,
         authenticator=authenticator,
     )
     adapter = get_account_adapter(request)
     adapter.add_message(request, messages.SUCCESS, "mfa/messages/webauthn_added.txt")
-    adapter.send_notification_mail("mfa/email/webauthn_added", request.user)
-    rc_authenticator = auto_generate_recovery_codes(request)
+    if not signup:
+        adapter.send_notification_mail("mfa/email/webauthn_added", user)
+    rc_authenticator = None
+    if not signup:
+        rc_authenticator = auto_generate_recovery_codes(request)
     return authenticator, rc_authenticator
 
 

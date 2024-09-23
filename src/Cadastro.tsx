@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { VStack, Box, Image, Alert, Text } from 'native-base';
-import { EntradaTexto } from './componentes/EntradaTextoCadastro';
+import { EntradaTextoCadastro } from './componentes/EntradaTextoCadastro';
 import { Botao } from './componentes/Botao';
 import { Titulo } from './componentes/Titulo';
 import { register } from './api';
@@ -39,29 +39,28 @@ export default function Cadastro({ navigation }: Props) {
 
   return (
     <VStack flex={1} alignItems="center" justifyContent="center" p={5} bg="white">
-      <Image source={Logo} alt="Logo CryptoInsight" mb={5} />
-      <Titulo>Cadastro</Titulo>
+      <Image source={Logo} alt="Logo CryptoInsight" mb={5} w={200} resizeMode='contain' />
 
-      <EntradaTexto
+      <EntradaTextoCadastro
         label="Nome de usuário"
-        placeholder="Digite seu nome de usuário"
+        placeholder="Digite um nome de usuário"
         value={username}
         onChangeText={setUsername}
       />
-      <EntradaTexto
-        label="Email"
+      <EntradaTextoCadastro
+        label="E-mail"
         placeholder="Digite seu e-mail"
         value={email}
         onChangeText={setEmail}
       />
-      <EntradaTexto
+      <EntradaTextoCadastro
         label="Senha"
         placeholder="Digite sua senha"
         secureTextEntry
         value={password1}
         onChangeText={setPassword1}
       />
-      <EntradaTexto
+      <EntradaTextoCadastro
         label="Confirme a senha"
         placeholder="Confirme sua senha"
         secureTextEntry
@@ -70,7 +69,7 @@ export default function Cadastro({ navigation }: Props) {
       />
 
       {error && (
-        <Alert w="100%" status="error" mt={2}>
+        <Alert marginTop={7} w="100%" status="error" mt={2}>
           <Text>{error}</Text>
         </Alert>
       )}

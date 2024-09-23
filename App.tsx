@@ -9,6 +9,7 @@ import Cadastro from './src/Cadastro';
 export type RootStackParamList = {
   Login: undefined;
   Cadastro: undefined;
+  ListaCriptos: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

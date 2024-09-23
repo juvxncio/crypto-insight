@@ -67,6 +67,14 @@ def build_urlpatterns(client):
                     name="login_webauthn",
                 )
             )
+        if mfa_settings.PASSKEY_SIGNUP_ENABLED:
+            auth_patterns.append(
+                path(
+                    "webauthn/signup",
+                    views.SignupWebAuthnView.as_api_view(client=client),
+                    name="signup_webauthn",
+                )
+            )
 
     return [
         path(

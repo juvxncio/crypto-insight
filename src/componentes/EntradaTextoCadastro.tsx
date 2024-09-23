@@ -9,7 +9,7 @@ interface InputProps {
   onChangeText: (text: string) => void;
 }
 
-export function EntradaTexto ({ 
+export function EntradaTextoCadastro ({ 
   label, 
   placeholder, 
   secureTextEntry = false,

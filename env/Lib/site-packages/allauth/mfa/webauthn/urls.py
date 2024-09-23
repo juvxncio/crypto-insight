@@ -35,3 +35,7 @@ urlpatterns: List[Union[URLPattern, URLResolver]] = [
 
 if app_settings.PASSKEY_LOGIN_ENABLED:
     urlpatterns.append(path("login/", views.login_webauthn, name="mfa_login_webauthn"))
+if app_settings.PASSKEY_SIGNUP_ENABLED:
+    urlpatterns.append(
+        path("signup/", views.signup_webauthn, name="mfa_signup_webauthn")
+    )
